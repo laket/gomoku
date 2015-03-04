@@ -2,6 +2,7 @@ package gomoku
 
 import "testing"
 import "os"
+import "io/ioutil"
 
 func TestNewBoard(t *testing.T) {
 	var seq [ROWS*COLUMNS + 1]uint8
@@ -63,6 +64,50 @@ func TestNewBoardsFromCSV(t *testing.T) {
 	if boards[1][0][2] != 1 {
 		t.Errorf("a value of board is wrong.")
 		boards[1].Print()
+	}
+}
+
+func TestBoardsToCSV(t *testing.T) {
+	board := Board{
+		[15]StoneType{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		[15]StoneType{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		[15]StoneType{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		[15]StoneType{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		[15]StoneType{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		[15]StoneType{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		[15]StoneType{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		[15]StoneType{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		[15]StoneType{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		[15]StoneType{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		[15]StoneType{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		[15]StoneType{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		[15]StoneType{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		[15]StoneType{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		[15]StoneType{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	}
+
+	boards := make([]*Board, 0, 2)
+	boards = append(boards, &board)
+	boards = append(boards, &board)
+
+	outFile, _ := ioutil.TempFile("", "csv")
+	defer outFile.Close()
+
+	BoardsToCSV(boards, outFile)
+
+	outFile.Seek(0, 0)
+	newBoards, err := NewBoardsFromCSV(outFile)
+
+	if err != nil {
+		t.Errorf("failed to reverse from CSV : %s", err.Error())
+		return
+	}
+
+	for i, v := range newBoards {
+		if v[0][0] != 1 || v[0][1] != 0 {
+			t.Errorf("failed to load %dth board", i)
+			v.Print()
+		}
 	}
 }
 

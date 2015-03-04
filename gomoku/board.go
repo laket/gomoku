@@ -279,3 +279,27 @@ func NewBoardsFromCSV(r io.Reader) ([]*Board, error) {
 
 	return boards, nil
 }
+
+// ToCSV writes csv file.
+func BoardsToCSV(boards []*Board, w io.Writer) []string {
+	// board[ROWS][COLS]
+	writer := csv.NewWriter(w)
+
+	record := make([]string, 0, ROWS*COLUMNS)
+
+	for _, board := range boards {
+		record = record[:0]
+
+		for r := 0; r < ROWS; r++ {
+			for c := 0; c < COLUMNS; c++ {
+				record = append(record, strconv.Itoa(int(board[r][c])))
+
+			}
+		}
+
+		writer.Write(record)
+	}
+
+	writer.Flush()
+	return record
+}
