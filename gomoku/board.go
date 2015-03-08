@@ -194,17 +194,17 @@ func (board *Board) CheckResult() BattleResult {
 		return -1, -1
 	}
 
-	r, c := checkWithStoneType(BLACK)
+	r, _ := checkWithStoneType(BLACK)
 
 	if r != -1 {
-		fmt.Printf("Black Win : (%d, %c)\n", r, 'a'+c)
+		//fmt.Printf("Black Win : (%d, %c)\n", r, 'a'+c)
 		return BLACKWIN
 	}
 
-	r, c = checkWithStoneType(WHITE)
+	r, _ = checkWithStoneType(WHITE)
 
 	if r != -1 {
-		fmt.Printf("White Win : (%d, %c)\n", r, 'a'+c)
+		//fmt.Printf("White Win : (%d, %c)\n", r, 'a'+c)
 		return WHITEWIN
 	}
 
